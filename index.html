@@ -360,6 +360,34 @@
       border-top: 1px dashed var(--border);
     }
 
+    .splash-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(1rem, 4vw, 2rem);
+      background: var(--bg);
+      transition: opacity 280ms ease-out;
+    }
+
+    .splash-overlay.splash--gone {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .splash-overlay__text {
+      margin: 0;
+      max-width: 22em;
+      text-align: center;
+      font-size: clamp(1.5rem, 6vw, 2.75rem);
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.03em;
+      color: var(--text);
+    }
+
     .visually-hidden {
       position: absolute;
       width: 1px;
@@ -374,6 +402,11 @@
   </style>
 </head>
 <body>
+  <div id="splash-overlay" class="splash-overlay" aria-hidden="true" role="presentation">
+    <p class="splash-overlay__text">
+      Before you use this calculator, just know you are probably really obese
+    </p>
+  </div>
   <main>
     <header class="header">
       <h1>BMI Calculator</h1>
@@ -485,6 +518,19 @@
   </main>
 
   <script>
+    (function splashOverlay() {
+      var splash = document.getElementById("splash-overlay");
+      if (!splash) return;
+      var DISMISS_MS = 3000;
+      var FADE_MS = 280;
+      window.setTimeout(function () {
+        splash.classList.add("splash--gone");
+        window.setTimeout(function () {
+          splash.remove();
+        }, FADE_MS);
+      }, DISMISS_MS);
+    })();
+
     (function () {
       const BAR_MIN = 15;
       const BAR_MAX = 40;
